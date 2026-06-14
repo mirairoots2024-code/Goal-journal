@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GOAL JOURNAL</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #d92b2b;
+    --black:  #111111;
+    --gray1:  #f4f4f4;
+    --gray2:  #e8e8e8;
+    --gray3:  #999999;
+    --white:  #ffffff;
+    --border: #dddddd;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* ── Header ───────────────────────── */
+  .header {
+    background: var(--black);
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .logo span {
+    color: var(--red);
+  }
+  .header-date {
+    font-size: 10px;
+    color: #666;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── Nav ──────────────────────────── */
+  .nav {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 13px 16px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: #666;
+    font-size: 10px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    margin-bottom: -1px;
+  }
+  .nav-btn.active {
+    color: var(--white);
+    border-bottom-color: var(--red);
+  }
+
+  /* ── Sections ─────────────────────── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── Hero band ────────────────────── */
+  .hero-band {
+    background: var(--black);
+    padding: 28px 16px 24px;
+    border-bottom: 3px solid var(--red);
+  }
+  .hero-band .en {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 6px;
+    color: var(--white);
+    line-height: 0.9;
+    display: block;
+  }
+  .hero-band .ja {
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 2px;
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* ── Horizon items ────────────────── */
+  .vision-list { padding: 0 16px; }
+
+  .vision-item {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+  }
+  .vision-item:last-child { border-bottom: none; }
+
+  .vision-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .vision-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: var(--black);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .vision-year span {
+    font-size: 18px;
+    color: var(--red);
+    letter-spacing: 1px;
+  }
+  .vision-label {
+    font-size: 10px;
+    color: var(--gray3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--gray1);
+    border: none;
+    border-left: 3px solid var(--border);
+    color: var(--black);
+    font-size: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    line-height: 1.9;
+    padding: 12px 14px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 80px;
+  }
+  textarea:focus { border-left-color: var(--red); }
+  textarea::placeholder { color: #bbb; font-size: 13px; }
+
+  /* ── Plus button ──────────────────── */
+  .plus-btn-wrap {
+    padding: 16px 16px 0;
+  }
+  .plus-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 0;
+    background: transparent;
+    border: none;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    color: var(--black);
+    font-size: 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .plus-btn:active { background: var(--gray1); }
+  .plus-icon {
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid var(--black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    line-height: 1;
+    transition: all 0.2s;
+  }
+  .plus-btn.primary .plus-icon {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+  }
+  .plus-btn.primary {
+    color: var(--red);
+    border-color: var(--red);
+  }
+
+  /* ── Daily ────────────────────────── */
+  .date-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--black);
+    padding: 12px 16px;
+  }
+  .date-nav button {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+    width: 32px;
+    text-align: center;
+  }
+  .date-nav .date-txt {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+
+  .daily-block {
+    padding: 20px 16px 0;
+  }
+  .block-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .block-label-en {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--black);
+  }
+  .block-label-ja {
+    font-size: 10px;
+    color: var(--gray3);
+    letter-spacing: 1px;
+  }
+  .block-head hr {
+    flex: 1;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Todo ──────────────────────────── */
+  .todo-list { margin: 0 0 4px; }
+  .todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .todo-check {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid #ccc;
+    border-radius: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .todo-check.done {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .todo-check.done::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .todo-text {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--black);
+  }
+  .todo-text.done { text-decoration: line-through; color: #bbb; }
+  .todo-del {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .add-row {
+    display: flex;
+    gap: 0;
+    margin-top: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .add-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--black);
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    padding: 12px 0;
+    outline: none;
+  }
+  .add-row input::placeholder { color: #ccc; }
+  .add-row button {
+    background: none;
+    color: var(--red);
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 4px;
+    font-weight: 300;
+  }
+
+  /* Progress */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .prog-bg {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+  }
+  .prog-fill {
+    height: 100%;
+    background: var(--red);
+    transition: width 0.4s;
+  }
+  .prog-txt {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: var(--gray3);
+    white-space: nowrap;
+  }
+
+  /* ── History ────────────────────────── */
+  .history-item {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 16px;
+  }
+  .h-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--black);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .h-date::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .h-sec {
+    font-size: 10px;
+    color: var(--gray3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    margin-top: 12px;
+  }
+  .h-sec:first-of-type { margin-top: 0; }
+  .h-body {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--black);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  .h-todo-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--black);
+    line-height: 1.8;
+  }
+  .h-check {
+    width: 12px; height: 12px;
+    border: 1.5px solid #ccc;
+    border-radius: 1px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+  }
+  .h-check.done { background: var(--red); border-color: var(--red); color: white; }
+
+  /* ── Empty ───────────────────────────── */
+  .empty {
+    padding: 60px 16px;
+    text-align: center;
+    color: var(--gray3);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .empty-en {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: var(--border);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* ── Toast ──────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--black);
+    color: var(--white);
+    padding: 10px 22px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: all 0.25s;
+    pointer-events: none;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* spacer */
+  .spacer { height: 20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">GOAL<span>.</span>JOURNAL</div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="switchTab('vision', this)">Vision</button>
+    <button class="nav-btn" onclick="switchTab('daily', this)">Today</button>
+    <button class="nav-btn" onclick="switchTab('history', this)">History</button>
+  </nav>
+</div>
+
+<!-- ── VISION ────────────────────────── -->
+<div class="section active" id="tab-vision">
+
+  <div class="hero-band">
+    <span class="en">FUTURE<br>VISION</span>
+    <span class="ja">未来のビジョン — 10年後から逆算して今を生きる</span>
+  </div>
+
+  <div class="vision-list">
+
+    <div class="vision-item">
+      <div class="vision-head">
+        <div class="vision-year">10<span>YRS</span></div>
+        <div class="vision-label">Ten Years<br>10年後のわたし</div>
+      </div>
+      <textarea id="vision10" rows="3" placeholder="10年後、どんな人になっていたいですか？&#10;どんな暮らし・仕事・関係を築いていますか？"></textarea>
+    </div>
+
+    <div class="vision-item">
+      <div class="vision-head">
+        <div class="vision-year">5<span>YRS</span></div>
+        <div class="vision-label">Five Years<br>5年後のわたし</div>
+      </div>
+      <textarea id="vision5" rows="3" placeholder="10年ビジョンへの大きな一歩。&#10;5年後に実現していることは？"></textarea>
+    </div>
+
+    <div class="vision-item">
+      <div class="vision-head">
+        <div class="vision-year">3<span>YRS</span></div>
+        <div class="vision-label">Three Years<br>3年後のわたし</div>
+      </div>
+      <textarea id="vision3" rows="3" placeholder="3年後に変わっていること。&#10;具体的に何が手に入っていますか？"></textarea>
+    </div>
+
+    <div class="vision-item">
+      <div class="vision-head">
+        <div class="vision-year">1<span>YR</span></div>
+        <div class="vision-label">One Year<br>1年後のわたし</div>
+      </div>
+      <textarea id="vision1" rows="3" placeholder="今年の目標。&#10;数字・成果・期日で具体的に書こう。"></textarea>
+    </div>
+
+  </div>
+
+  <div class="plus-btn-wrap">
+    <button class="plus-btn primary" onclick="saveVision()">
+      <div class="plus-icon">+</div>
+      SAVE VISION — ビジョンを保存する
+    </button>
+  </div>
+  <div class="spacer"></div>
+</div>
+
+<!-- ── DAILY ─────────────────────────── -->
+<div class="section" id="tab-daily">
+
+  <div class="date-nav">
+    <button onclick="changeDate(-1)">‹</button>
+    <div class="date-txt" id="dateDisplay"></div>
+    <button id="btnNext" onclick="changeDate(1)">›</button>
+  </div>
+
+  <!-- Goal -->
+  <div class="daily-block">
+    <div class="block-head">
+      <div class="block-label-en">Goal</div>
+      <div class="block-label-ja">今日の目標</div>
+      <hr>
+    </div>
+    <textarea id="dailyGoal" rows="3" placeholder="今日、何を達成したいですか？&#10;1年後のビジョンに繋がる1つのことを。"></textarea>
+  </div>
+
+  <!-- Todo -->
+  <div class="daily-block">
+    <div class="block-head">
+      <div class="block-label-en">To Do</div>
+      <div class="block-label-ja">やること</div>
+      <hr>
+    </div>
+    <div class="todo-list" id="todoList"></div>
+    <div class="add-row">
+      <input type="text" id="todoInput" placeholder="タスクを追加..." onkeydown="if(event.key==='Enter')addTodo()">
+      <button onclick="addTodo()">+</button>
+    </div>
+    <div class="progress-row">
+      <div class="prog-bg"><div class="prog-fill" id="progressBar" style="width:0%"></div></div>
+      <div class="prog-txt" id="progressLabel">0 / 0</div>
+    </div>
+  </div>
+
+  <!-- Reflection -->
+  <div class="daily-block">
+    <div class="block-head">
+      <div class="block-label-en">Reflection</div>
+      <div class="block-label-ja">振り返り</div>
+      <hr>
+    </div>
+    <textarea id="reflection" rows="5" placeholder="・できたこと&#10;・できなかったこと&#10;・明日に活かすこと"></textarea>
+  </div>
+
+  <div class="plus-btn-wrap">
+    <button class="plus-btn primary" onclick="saveDaily()">
+      <div class="plus-icon">+</div>
+      SAVE TODAY — 今日の記録を保存する
+    </button>
+  </div>
+  <div class="spacer"></div>
+</div>
+
+<!-- ── HISTORY ────────────────────────── -->
+<div class="section" id="tab-history">
+
+  <div class="hero-band" style="padding: 20px 16px 18px;">
+    <span class="en" style="font-size:36px;">PAST RECORDS</span>
+    <span class="ja">過去の記録</span>
+  </div>
+
+  <div id="historyList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ─────────────────────────────
+let currentDate = todayStr();
+let dailyData = {};
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function formatBebas(str) {
+  const [y, m, d] = str.split('-');
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const wd = new Date(str).getDay();
+  return `${y}.${pad(m)}.${pad(d)} — ${days[wd]}`;
+}
+
+// ── Init ──────────────────────────────
+(function(){
+  const d = new Date();
+  const mo = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  document.getElementById('headerDate').textContent = `${mo[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  loadVision();
+  loadAllDaily();
+  renderDate();
+})();
+
+// ── Tab ───────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'history') renderHistory();
+}
+
+// ── Vision ────────────────────────────
+function saveVision() {
+  localStorage.setItem('gm_vision', JSON.stringify({
+    v10: document.getElementById('vision10').value,
+    v5:  document.getElementById('vision5').value,
+    v3:  document.getElementById('vision3').value,
+    v1:  document.getElementById('vision1').value,
+  }));
+  showToast('VISION SAVED');
+}
+function loadVision() {
+  const raw = localStorage.getItem('gm_vision');
+  if (!raw) return;
+  const v = JSON.parse(raw);
+  document.getElementById('vision10').value = v.v10 || '';
+  document.getElementById('vision5').value  = v.v5  || '';
+  document.getElementById('vision3').value  = v.v3  || '';
+  document.getElementById('vision1').value  = v.v1  || '';
+}
+
+// ── Daily ──────────────────────────────
+function loadAllDaily() {
+  const raw = localStorage.getItem('gm_daily');
+  dailyData = raw ? JSON.parse(raw) : {};
+}
+function saveAllDaily() { localStorage.setItem('gm_daily', JSON.stringify(dailyData)); }
+function getDay(d) { return dailyData[d] || { goal:'', todos:[], reflection:'' }; }
+
+function renderDate() {
+  document.getElementById('dateDisplay').textContent = formatBebas(currentDate);
+  const day = getDay(currentDate);
+  document.getElementById('dailyGoal').value = day.goal || '';
+  document.getElementById('reflection').value = day.reflection || '';
+  renderTodos(day.todos || []);
+  document.getElementById('btnNext').style.opacity = currentDate >= todayStr() ? '0.2' : '1';
+}
+
+function changeDate(d) {
+  const next = new Date(currentDate);
+  next.setDate(next.getDate() + d);
+  const s = `${next.getFullYear()}-${pad(next.getMonth()+1)}-${pad(next.getDate())}`;
+  if (s > todayStr()) return;
+  currentDate = s;
+  renderDate();
+}
+
+function renderTodos(todos) {
+  const list = document.getElementById('todoList');
+  list.innerHTML = '';
+  todos.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'todo-item';
+    el.innerHTML = `
+      <div class="todo-check ${t.done?'done':''}" onclick="toggleTodo(${i})"></div>
+      <div class="todo-text ${t.done?'done':''}">${esc(t.text)}</div>
+      <button class="todo-del" onclick="deleteTodo(${i})">×</button>
+    `;
+    list.appendChild(el);
+  });
+  updateProgress(todos);
+}
+
+function updateProgress(todos) {
+  const total = todos.length, done = todos.filter(t=>t.done).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${done} / ${total}`;
+}
+
+function addTodo() {
+  const inp = document.getElementById('todoInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  const day = getDay(currentDate);
+  day.todos.push({ text, done: false });
+  dailyData[currentDate] = day;
+  saveAllDaily();
+  inp.value = '';
+  renderTodos(day.todos);
+}
+function toggleTodo(i) {
+  const day = getDay(currentDate);
+  day.todos[i].done = !day.todos[i].done;
+  dailyData[currentDate] = day;
+  saveAllDaily();
+  renderTodos(day.todos);
+}
+function deleteTodo(i) {
+  const day = getDay(currentDate);
+  day.todos.splice(i, 1);
+  dailyData[currentDate] = day;
+  saveAllDaily();
+  renderTodos(day.todos);
+}
+function saveDaily() {
+  const day = getDay(currentDate);
+  day.goal = document.getElementById('dailyGoal').value;
+  day.reflection = document.getElementById('reflection').value;
+  dailyData[currentDate] = day;
+  saveAllDaily();
+  showToast('SAVED');
+}
+
+// ── History ────────────────────────────
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  const dates = Object.keys(dailyData).sort().reverse();
+  if (!dates.length) {
+    list.innerHTML = '<div class="empty"><span class="empty-en">NO RECORDS</span>まだ記録がありません</div>';
+    return;
+  }
+  list.innerHTML = dates.map(d => {
+    const day = dailyData[d];
+    const todos = day.todos || [];
+    const done = todos.filter(t=>t.done).length;
+    const todoHTML = todos.map(t =>
+      `<div class="h-todo-line"><div class="h-check ${t.done?'done':''}">${t.done?'✓':''}</div><span style="${t.done?'color:#bbb;text-decoration:line-through':''}">${esc(t.text)}</span></div>`
+    ).join('');
+    return `
+      <div class="history-item">
+        <div class="h-date">${formatBebas(d)}</div>
+        ${day.goal ? `<div class="h-sec">Goal</div><div class="h-body">${esc(day.goal)}</div>` : ''}
+        ${todos.length ? `<div class="h-sec">To Do — ${done}/${todos.length}</div>${todoHTML}` : ''}
+        ${day.reflection ? `<div class="h-sec">Reflection</div><div class="h-body">${esc(day.reflection)}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ── Utils ──────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
